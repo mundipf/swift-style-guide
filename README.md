@@ -15,12 +15,27 @@ then open a pull request. :zap:
 
 #### Whitespace
 
- * Tabs, not spaces.
+ * Four spaces, not tabs.
  * End files with a newline.
  * Make liberal use of vertical whitespace to divide code into logical chunks.
  * Don’t leave trailing whitespace.
    * Not even leading indentation on blank lines.
 
+#### Typical application groups
+
+Every normal application that handle API calls should have at least the following groups, this is to have an agreement, on the project structure.
+
+  * Extensions - _This folder contains extensions made to core component classes_
+  * Backend - _This is where our backend logic should go API mangers, etc._
+  * Entities - _This is a place to have the models that our application will handle_
+  * Storyboards - _Here we will have the storyboards used by the application_
+  * Supporting Files - _Constants and other files that will be used to manage configurations or static values will be here_ 
+   
+#### Make a folder associated with each group
+
+Whenever we create a new group we should create an associated folder for that group, all files that are in the same group must be on the same folder on the file system.
+
+*Note:* Supporting Files group will have a folder called SupportingFiles
 
 #### Prefer `let`-bindings over `var`-bindings wherever possible
 
@@ -229,6 +244,38 @@ struct Car: Vehicle {
 
 _Rationale:_ Value types are simpler, easier to reason about, and behave as expected with the `let` keyword.
 
+#### Constants
+
+Constants should be defined in his own classes, use `struct` to define them. The constant file should be on the _"Supporting Files"_ group.
+
+For example, API urls:
+
+```swift
+struct API {
+    static let baseURL: String = "https://apiurl.com/"
+    static let apiVersion: String = "1.1"
+}
+```
+
+For those cases that you need another level of constants define them as a sub `struct` of the main category on the same file.
+
+```swift
+struct API {
+
+    static let baseURL: String = "https://apiurl.com/"
+    static let apiVersion: String = "1.1"
+    
+    struct Actions {
+    
+    	static let awesomeAction: String = "awesome-action"
+    	
+    }
+    
+}
+```
+
+_Rationale:_ Have constants on a centralized place allow the developers to find them easily.
+
 #### Make classes `final` by default
 
 Classes should start as `final`, and only be changed to allow subclassing if a valid need for inheritance has been identified. Even in that case, as many definitions as possible _within_ the class should be `final` as well, following the same rules.
@@ -279,9 +326,3 @@ func <|< <A>(lhs: A, rhs: A) -> A
 ```
 
 _Rationale:_ Operators consist of punctuation characters, which can make them difficult to read when immediately followed by the punctuation for a type or value parameter list. Adding whitespace separates the two more clearly.
-
-#### Translations
-
-* [中文版](https://github.com/Artwalk/swift-style-guide/blob/master/README_CN.md)
-* [日本語版](https://github.com/jarinosuke/swift-style-guide/blob/master/README_JP.md)
-* [한국어판](https://github.com/minsOne/swift-style-guide/blob/master/README_KR.md)
