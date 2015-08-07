@@ -276,6 +276,23 @@ struct API {
 
 _Rationale:_ Have constants on a centralized place allow the developers to find them easily.
 
+#### Singltons
+
+The preferred way of doing a Singleton in swift is the following:
+
+```swift
+final class Singleton {
+
+    static let sharedInstance = Singleton()
+
+    init() {
+    }
+
+}
+```
+
+_Note:_ The Singleton class is final so nobody can extend from that class and create another instance, and the name of the uniq instance is *sharedInstance*.
+
 #### Make classes `final` by default
 
 Classes should start as `final`, and only be changed to allow subclassing if a valid need for inheritance has been identified. Even in that case, as many definitions as possible _within_ the class should be `final` as well, following the same rules.
