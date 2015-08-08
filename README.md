@@ -13,29 +13,33 @@ then open a pull request. :zap:
 
 ----
 
-#### Whitespace
+#### Whitespace & Formatting
 
  * Four spaces, not tabs.
  * End files with a newline.
  * Make liberal use of vertical whitespace to divide code into logical chunks.
  * Don’t leave trailing whitespace.
    * Not even leading indentation on blank lines.
+ 
+ * Colon separated items, i.e. an identifier sollowing a variable or type should have no space before and one after the colon. The same should be observed for dictionary declarations.
+   * `var age: Int`
+   * `var record = [String: AnyObject]()`
+   * _Rationale:_ The type specifier is saying something about the _identifier_ so it should be positioned with it.
 
-#### Typical application groups
+#### Braces
 
-Every normal application that handle API calls should have at least the following groups, this is to have an agreement, on the project structure.
+Starting brace should be on the same line, else keyword should start on a new line:
+ 
+```swift
+if age < 18 {
+    // handle minor
+}
+else {
+    // handle adult
+}
+```
 
-  * Extensions - _This folder contains extensions made to core component classes_
-  * Backend - _This is where our backend logic should go API mangers, etc._
-  * Entities - _This is a place to have the models that our application will handle_
-  * Storyboards - _Here we will have the storyboards used by the application_
-  * Supporting Files - _Constants and other files that will be used to manage configurations or static values will be here_ 
-   
-#### Make a folder associated with each group
-
-Whenever we create a new group we should create an associated folder for that group, all files that are in the same group must be on the same folder on the file system.
-
-*Note:* Supporting Files group will have a folder called SupportingFiles
+Note: **not** `} else {` on one line.
 
 #### Prefer `let`-bindings over `var`-bindings wherever possible
 
@@ -58,7 +62,8 @@ Instead, prefer this:
 ```swift
 if let foo = foo {
     // Use unwrapped `foo` value in here
-} else {
+} 
+else {
     // If appropriate, handle the case where the optional is nil
 }
 ```
@@ -66,7 +71,8 @@ if let foo = foo {
 Alternatively, you might want to use Swift's Optional Chaining in some of these cases, such as:
 
 ```swift
-// Call the function if `foo` is not nil. If `foo` is nil, ignore we ever tried to make the call
+// Call the function if `foo` is not nil. 
+// If `foo` is nil, ignore we ever tried to make the call
 foo?.callSomethingIfFooIsNotNil()
 ```
 
@@ -74,87 +80,35 @@ _Rationale:_ Explicit `if let`-binding of optionals results in safer code. Force
 
 #### Avoid Using Implicitly Unwrapped Optionals
 
-Where possible, use `let foo: FooType?` instead of `let foo: FooType!` if `foo` may be nil (Note that in general, `?` can be used instead of `!`).
-
+Where possible, use `let foo: FooType?` instead of `let foo: FooType!` if `foo` may be nil (Note that in general, `?` can be used instead of `!`).    
 _Rationale:_ Explicit optionals result in safer code. Implicitly unwrapped optionals have the potential of crashing at runtime.
 
-#### Prefer implicit getters on read-only properties and subscripts
-
-When possible, omit the `get` keyword on read-only computed properties and
-read-only subscripts.
-
-So, write these:
+Exception: `@IBOutlet`s which are guranteed to exist after successful compilation.    
+_Rationale_: This will prevent forgotten links from a xib or storyboard during compile time.
 
 ```swift
-var myGreatProperty: Int {
-	return 4
-}
-
-subscript(index: Int) -> T {
-    return objects[index]
-}
+@IBOutlet titleLabel: UILabel!
 ```
-
-… not these:
-
-```swift
-var myGreatProperty: Int {
-	get {
-		return 4
-	}
-}
-
-subscript(index: Int) -> T {
-    get {
-        return objects[index]
-    }
-}
-```
-
-_Rationale:_ The intent and meaning of the first version is clear, and results in less code.
 
 #### Always specify access control explicitly for top-level definitions
 
 Top-level functions, types, and variables should always have explicit access control specifiers:
 
 ```swift
-public var whoopsGlobalState: Int
-internal struct TheFez {}
-private func doTheThings(things: [Thing]) {}
+public var globalCount: Int
+internal struct Event {}
+private func doThings(things: [Thing]) {}
 ```
 
 However, definitions within those can leave access control implicit, where appropriate:
 
 ```swift
-internal struct TheFez {
-	var owner: Person = Joshaber()
+internal struct Event {
+	var owner = Person()
 }
 ```
 
 _Rationale:_ It's rarely appropriate for top-level definitions to be specifically `internal`, and being explicit ensures that careful thought goes into that decision. Within a definition, reusing the same access control specifier is just duplicative, and the default is usually reasonable.
-
-#### When specifying a type, always associate the colon with the identifier
-
-When specifying the type of an identifier, always put the colon immediately
-after the identifier, followed by a space and then the type name.
-
-```swift
-class SmallBatchSustainableFairtrade: Coffee { ... }
-
-let timeToCoffee: NSTimeInterval = 2
-
-func makeCoffee(type: CoffeeType) -> Coffee { ... }
-```
-
-_Rationale:_ The type specifier is saying something about the _identifier_ so
-it should be positioned with it.
-
-Also, when specifying the type of a dictionary, always put the colon immediately
-after the key type, followed by a space and then the value type.
-
-```swift
-let capitals: [Country: City] = [ Sweden: Stockholm ]
-```
 
 #### Only explicitly refer to `self` when required
 
@@ -246,7 +200,7 @@ _Rationale:_ Value types are simpler, easier to reason about, and behave as expe
 
 #### Constants
 
-Constants should be defined in his own classes, use `struct` to define them. The constant file should be on the _"Supporting Files"_ group.
+Constants should be defined in his own classes, use `struct` to define them. 
 
 For example, API urls:
 
@@ -261,37 +215,33 @@ For those cases that you need another level of constants define them as a sub `s
 
 ```swift
 struct API {
-
     static let baseURL: String = "https://apiurl.com/"
     static let apiVersion: String = "1.1"
     
-    struct Actions {
-    
-    	static let awesomeAction: String = "awesome-action"
-    	
+    struct Action {
+    	static let getAllEvents: String = "events/list"
     }
-    
 }
 ```
 
-_Rationale:_ Have constants on a centralized place allow the developers to find them easily.
+_Rationale:_ Have constants on a centralized place allow the developers to find them easily. Structs are very efficient and thread safe.
 
-#### Singltons
+#### Singletons
 
-The preferred way of doing a Singleton in swift is the following:
+The preferred way of doing a Singleton in swift is with a static class constant:
 
 ```swift
-final class Singleton {
-
-    static let sharedInstance = Singleton()
-
-    init() {
-    }
-
+final class DataManager {
+    static let sharedInstance = DataManager()
+    func fetchAllRecords() { ... }
 }
+
+// usage:
+DataManager.sharedInstance.fetchAllRecords()
 ```
 
-_Note:_ The Singleton class is final so nobody can extend from that class and create another instance, and the name of the uniq instance is *sharedInstance*.
+_Note:_ The Singleton class is final so nobody can extend from that class and create another instance, and the name of the uniq instance is *sharedInstance*.     
+_Note:_ Other names apart from `sharedInstance`are also permissible where it enhances readability, such as `sharedManager` or `sharedClient`, etc.
 
 #### Make classes `final` by default
 
@@ -325,7 +275,7 @@ struct Composite<T> {
 ```
 
 _Rationale:_ Omitting redundant type parameters clarifies the intent, and makes it obvious by contrast when the returned type takes different type parameters.
-
+c
 #### Use whitespace around operator definitions
 
 Use whitespace around operators when defining them. Instead of:
