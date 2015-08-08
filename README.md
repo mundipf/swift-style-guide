@@ -15,16 +15,23 @@ then open a pull request. :zap:
 
 #### Whitespace & Formatting
 
- * Four spaces, not tabs.
- * End files with a newline.
- * Make liberal use of vertical whitespace to divide code into logical chunks.
- * Don’t leave trailing whitespace.
-   * Not even leading indentation on blank lines.
- 
- * Colon separated items, i.e. an identifier sollowing a variable or type should have no space before and one after the colon. The same should be observed for dictionary declarations.
-   * `var age: Int`
-   * `var record = [String: AnyObject]()`
-   * _Rationale:_ The type specifier is saying something about the _identifier_ so it should be positioned with it.
+- Use four spaces, not tabs.     
+- End files with a newline.    
+- Make liberal use of vertical whitespace to divide code into logical chunks.    
+- Don’t leave trailing whitespace (not even leading indentation on blank lines).
+
+_See also the remark on white spaces in operator definitions at the end of this guide._
+
+#### Colons
+
+Colon separated items, i.e. an identifier for a variable or type definition should have no space before and one after the colon. The same should be observed for dictionary declarations.    
+
+_Rationale:_ The type specifier is saying something about the _identifier_ so it should be positioned with it.
+
+```swift
+var age: Int
+var record = [String: AnyObject]()
+```
 
 #### Braces
 
@@ -39,7 +46,7 @@ else {
 }
 ```
 
-Note: **not** `} else {` on one line.
+_Note:_ Do not use `} else {` on a single line.
 
 #### Prefer `let`-bindings over `var`-bindings wherever possible
 
